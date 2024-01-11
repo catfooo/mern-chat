@@ -1,3 +1,5 @@
+# can login, but cant see login page after refresh.
+
 # this might related to cookie. while request header has set cookie, respond header has not that. at profile at network tab. however, login at network tab has it and showing profile page. the browser keeps have cookie at cookie storage at application tab. but when i see this console log console.log('routes:', id,username) from routes tab, it become undefined, and this might make the profile page not showing.
 
 # problem: when user log in, and when they refreshes, they see login page instead of profile page. (sounds familiar haha...)
