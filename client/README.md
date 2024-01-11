@@ -1,3 +1,7 @@
+# this might related to cookie. while request header has set cookie, respond header has not that. at profile at network tab. however, login at network tab has it and showing profile page. the browser keeps have cookie at cookie storage at application tab. but when i see this console log console.log('routes:', id,username) from routes tab, it become undefined, and this might make the profile page not showing.
+
+# problem: when user log in, and when they refreshes, they see login page instead of profile page. (sounds familiar haha...)
+
 # wanted to ask about this to chatgpt. which is not loading. idk how would i work without this...
 
 # 1:22:50 "if im refreshed, im still logged in!!" this was bit different from my side. so if i refresh, i was supposed to see the 'profile' from network tab.  this shows 200, which means that i might still logged in. the localstorage holds cookie, so might logged in still. but i see register/login page when i refresh, not like the video. the video is showing 'logged in! test1', which is not like me currently. 
