@@ -21,6 +21,7 @@ app.use(cookieParser())
 app.use(cors({
     credentials: true,
     origin: process.env.CLIENT_URL,
+    // origin: 'http://localhost:5173',
 }))
 
 app.get('/test', (req, res) => {
@@ -44,7 +45,17 @@ app.post('/login', async (req, res) => {
     const {username, password} = req.body
     const foundUser = await User.findOne({username})
     if (foundUser) {
-        
+        const passOk = bcrypt.compareSync(password, foundUser.password)
+        if (passOk) {
+            jwt.sign({ userId: foundUser._id, username }, jwtSecret, {}, (err, token) => {
+                // res.cookie('token', token).json({
+                //     id: foundUser._id,
+                // })
+                res.cookie('token', token, { sameSite: 'none', secure: true }).json({
+                    id: foundUser._id,
+                })
+            })
+        }
     }
 })
 
