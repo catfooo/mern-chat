@@ -30,10 +30,12 @@ app.get('/test', (req, res) => {
 
 app.get('/profile', (req, res) => {
     const token = req.cookies?.token
+    console.log('token in request:', token)
     if (token) {
         jwt.verify(token, jwtSecret, {}, (err, userData) => {
             if (err) throw err
             res.json({userData})
+            console.log('userData:', userData)
         })
     } else {
         res.status(401).json('no token')

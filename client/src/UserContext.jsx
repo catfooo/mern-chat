@@ -10,6 +10,7 @@ export function UserContextProvider({children}) {
         axios.get('/profile').then(response => {
             setId(response.data.userId)
             setUsername(response.data.username)
+            console.log('userContext:', response.data)
         })
     }, [])
 

@@ -1,6 +1,8 @@
 import { useContext } from "react";
 import RegisterAndLoginForm from "./RegisterAndLoginForm";
 import { UserContext } from "./UserContext";
+import jwt_decode from "jwt-decode"
+import { useState } from "react";
 
 const getCookie = (name) => {
     const value = `; ${document.cookie}`;
@@ -9,10 +11,19 @@ const getCookie = (name) => {
 };
 
 export default function Routes() {
-    const { username, id } = useContext(UserContext)
+    const { username: contextUsername, id: contextId } = useContext(UserContext);
+    const [username, setUsername] = useState(contextUsername);
+    const [id, setId] = useState(contextId);
+
+    // const { username, id } = useContext(UserContext)
     console.log('routes:', id,username)
     const token = getCookie('token')
     console.log('token in client:', token)
+    if (token) {
+        const decodedToken = jwt_decode(token)
+        setUsername(decodedToken.username)
+        setId(decodedToken.id)
+    }
 
     if (username) {
         return 'logged in!' + username
