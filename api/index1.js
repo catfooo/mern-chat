@@ -63,6 +63,30 @@ app.get('/profile', (req, res) => {
     
 })
 
+// Define a middleware to handle the HTML response with embedded user data
+app.use((req, res, next) => {
+    // Combine the initial HTML and user data
+    const htmlWithUserData = `
+      <!doctype html>
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <script id="initial-user-data" type="application/json">
+            ${JSON.stringify(res.locals.userData)}
+          </script>
+          <!-- Other head elements -->
+        </head>
+        <body>
+          <div id="root"></div>
+          <script type="module" src="/src/main.jsx"></script>
+        </body>
+      </html>
+    `;
+  
+    // Send the HTML response
+    res.send(htmlWithUserData);
+  });
+
 app.post('/login', async (req, res) => {
     const {username, password} = req.body
     const foundUser = await User.findOne({username})
@@ -100,31 +124,5 @@ app.post('/register', async (req, res) => {
         res.status(500).json('error')
     }
 })
-
-// Define a middleware to handle the HTML response with embedded user data
-app.use((req, res, next) => {
-    console.log('html middleware')
-    // Combine the initial HTML and user data
-    const htmlWithUserData = `
-      <!doctype html>
-      <html lang="en">
-        <head>
-          <meta charset="UTF-8" />
-          <script id="initial-user-data" type="application/json">
-            ${JSON.stringify(res.locals.userData)}
-          </script>
-          <!-- Other head elements -->
-        </head>
-        <body>
-          <div id="root"></div>
-          <script type="module" src="/src/main.jsx"></script>
-        </body>
-      </html>
-    `;
-  
-    // Send the HTML response
-    res.send(htmlWithUserData);
-  });
-
 
 app.listen(4040)
