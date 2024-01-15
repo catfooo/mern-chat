@@ -1,3 +1,80 @@
+# one suggestion - since the result that the video has different from what you got, try to do things again from the scratch?
+
+
+# i have this problem, 
+
+jsonwebtoken.js?v=c46e4e6b:14 Module "buffer" has been externalized for browser compatibility. Cannot access "buffer.Buffer" in client code. See https://vitejs.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+get @ jsonwebtoken.js?v=c46e4e6b:14
+../../node_modules/safe-buffer/index.js @ jsonwebtoken.js?v=c46e4e6b:25
+__require @ chunk-P2LSHJDD.js?v=c46e4e6b:4
+../../node_modules/jws/lib/sign-stream.js @ jsonwebtoken.js?v=c46e4e6b:581
+__require @ chunk-P2LSHJDD.js?v=c46e4e6b:4
+../../node_modules/jws/index.js @ jsonwebtoken.js?v=c46e4e6b:761
+__require @ chunk-P2LSHJDD.js?v=c46e4e6b:4
+../../node_modules/jsonwebtoken/decode.js @ jsonwebtoken.js?v=c46e4e6b:794
+__require @ chunk-P2LSHJDD.js?v=c46e4e6b:4
+../../node_modules/jsonwebtoken/index.js @ jsonwebtoken.js?v=c46e4e6b:4387
+__require @ chunk-P2LSHJDD.js?v=c46e4e6b:4
+(anonym) @ jsonwebtoken.js?v=c46e4e6b:4396
+Visa 12 ramar till
+Visa färre
+jsonwebtoken.js?v=c46e4e6b:31 Uncaught TypeError: Cannot read properties of undefined (reading 'from')
+    at ../../node_modules/safe-buffer/index.js (jsonwebtoken.js?v=c46e4e6b:31:17)
+    at __require (chunk-P2LSHJDD.js?v=c46e4e6b:4:50)
+    at ../../node_modules/jws/lib/sign-stream.js (jsonwebtoken.js?v=c46e4e6b:581:19)
+    at __require (chunk-P2LSHJDD.js?v=c46e4e6b:4:50)
+    at ../../node_modules/jws/index.js (jsonwebtoken.js?v=c46e4e6b:761:22)
+    at __require (chunk-P2LSHJDD.js?v=c46e4e6b:4:50)
+    at ../../node_modules/jsonwebtoken/decode.js (jsonwebtoken.js?v=c46e4e6b:794:15)
+    at __require (chunk-P2LSHJDD.js?v=c46e4e6b:4:50)
+    at ../../node_modules/jsonwebtoken/index.js (jsonwebtoken.js?v=c46e4e6b:4387:15)
+    at __require (chunk-P2LSHJDD.js?v=c46e4e6b:4:50)
+
+
+
+and you said
+
+e crypto Module Instead of buffer:
+Since you're working in a browser environment, you might want to try using the crypto module instead of buffer. Update your jsonwebtoken library to use the browser version. You can do this by specifying the browser field in your package.json:
+json
+Copy code
+"browser": {
+  "jsonwebtoken": "./path/to/browser/jsonwebtoken.js"
+}
+Make sure to replace "./path/to/browser/jsonwebtoken.js" with the correct path to the browser version of jsonwebtoken. Check the library's documentation or source code for the appropriate file.
+
+
+this. so I was trying to create jsonwebtoken.js
+
+
+tell me how to proceed
+
+# There is no need of require while using the Buffer library as it is a global object.
+https://vinod827.medium.com/decoding-a-jwt-token-in-nodejs-b8d5d079dea7
+https://www.google.com/search?client=safari&rls=en&q=jwt+buffer&ie=UTF-8&oe=UTF-8
+'jwt buffer' google search
+https://www.google.com/search?client=safari&rls=en&q=jsonwebtoken+browser&ie=UTF-8&oe=UTF-8
+'jswebtoken browser' google search
+
+# the false root from chatgpt that i tried to do today
+
+se crypto Module Instead of buffer:
+Since you're working in a browser environment, you might want to try using the crypto module instead of buffer. Update your jsonwebtoken library to use the browser version. You can do this by specifying the browser field in your package.json:
+json
+Copy code
+"browser": {
+  "jsonwebtoken": "./path/to/browser/jsonwebtoken.js"
+}
+Make sure to replace "./path/to/browser/jsonwebtoken.js" with the correct path to the browser version of jsonwebtoken. Check the library's documentation or source code for the appropriate file.
+
+
+
+
+
+
+
+
+
 # can login, but cant see login page after refresh.
 
 # this might related to cookie. while request header has set cookie, respond header has not that. at profile at network tab. however, login at network tab has it and showing profile page. the browser keeps have cookie at cookie storage at application tab. but when i see this console log console.log('routes:', id,username) from routes tab, it become undefined, and this might make the profile page not showing.
