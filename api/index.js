@@ -73,9 +73,13 @@ app.post('/login', async (req, res) => {
                 // res.cookie('token', token).json({
                 //     id: foundUser._id,
                 // })
-                res.cookie('token', token, { sameSite: 'none', secure: true }).json({
+                // res.cookie('token', token, { sameSite: 'none', secure: true }).json({
+                //     id: foundUser._id,
+                // })
+                // Set HttpOnly and Secure flags for security
+                res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'none' }).json({
                     id: foundUser._id,
-                })
+                });
             })
         }
     }
@@ -91,9 +95,13 @@ app.post('/register', async (req, res) => {
         })
         jwt.sign({ userId: createdUser._id, username }, jwtSecret, {}, (err, token) => {
             if (err) throw err;
-            res.cookie('token', token, {sameSite: 'none', secure: true}).status(201).json({
+            // res.cookie('token', token, {sameSite: 'none', secure: true}).status(201).json({
+            //     id: createdUser._id, 
+            // })
+            // Set HttpOnly and Secure flags for security
+            res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'none' }).status(201).json({
                 id: createdUser._id, 
-            })
+            });
         })
     } catch (err) {
         if (err) throw err
