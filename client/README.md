@@ -1,3 +1,7 @@
+# i thought, right after i implemented isLoggedin, i saw logged in page is not undefined. i thought it become undefined after i added this and that. so i tried to go back, but it is still undefined i refresh. i thought it was once has value after i refresh, but might seen a fake vision or something xD i wish myself to pls stop this and go back to video and try again this from the beginning, rather than putting time to solve this at this state. what a meaningless pain!
+
+# isLoggedin
+
 # one suggestion - since the result that the video has different from what you got, try to do things again from the scratch?
 
 

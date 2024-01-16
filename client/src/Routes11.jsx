@@ -13,21 +13,38 @@ export default function Routes() {
     const { isLoggedIn, username: contextUsername, id: contextId } = useContext(UserContext);
     const [username, setUsername] = useState(contextUsername);
     const [id, setId] = useState(contextId);
+    const [isLoading, setIsLoading] = useState(true)
     console.log('2', username, id)
+    console.log('3', username, id, isLoggedIn)
+    console.log('isLoading:', isLoading);
+    console.log('isLoggedIn:', isLoggedIn);
 
     useEffect(() => {
         setUsername(contextUsername);
         setId(contextId);
+        // setIsLoading(false)
 
         const token = getCookie('token');
         console.log('token in client:', token);
         console.log('routes:', id, username);
+        setIsLoading(false)
     }, [contextUsername, contextId, id, username]); // Only run when context values change
 
-    // if (username) {
-    if (isLoggedIn) {
-        return 'logged in!' + username;
+    if (isLoading) {
+        return 'loading...'
     }
+
+    // if (username) {
+    // // if (isLoggedIn) {
+    //     console.log('contextUsername:', contextUsername)
+    //     return 'logged in!' + username;
+    // }
+
+    // if (username) {
+        if (isLoggedIn) {
+            console.log('contextUsername2:', contextUsername)
+            return 'logged in2!' + username;
+        }
 
     return <RegisterAndLoginForm />;
 }
