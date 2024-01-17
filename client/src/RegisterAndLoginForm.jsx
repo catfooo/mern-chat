@@ -11,6 +11,9 @@ export default function RegisterAndLoginForm() {
         ev.preventDefault()
         const url = isLoginOrRegister === 'register' ? 'register' : 'login'
         const {data} = await axios.post(url, { username, password })
+
+        localStorage.setItem('token', data.token);
+
         setLoggedInUsername(username)
         setId(data.id)
     }

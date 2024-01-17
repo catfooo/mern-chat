@@ -63,30 +63,6 @@ app.get('/profile', (req, res) => {
     
 })
 
-// // Define a middleware to handle the HTML response with embedded user data
-// app.use((req, res, next) => {
-//     // Combine the initial HTML and user data
-//     const htmlWithUserData = `
-//       <!doctype html>
-//       <html lang="en">
-//         <head>
-//           <meta charset="UTF-8" />
-//           <script id="initial-user-data" type="application/json">
-//             ${JSON.stringify(res.locals.userData)}
-//           </script>
-//           <!-- Other head elements -->
-//         </head>
-//         <body>
-//           <div id="root"></div>
-//           <script type="module" src="/src/main.jsx"></script>
-//         </body>
-//       </html>
-//     `;
-  
-//     // Send the HTML response
-//     res.send(htmlWithUserData);
-//   });
-
 app.post('/login', async (req, res) => {
     const {username, password} = req.body
     const foundUser = await User.findOne({username})
@@ -98,8 +74,10 @@ app.post('/login', async (req, res) => {
                 //     id: foundUser._id,
                 // })
                 res.cookie('token', token, { sameSite: 'none', secure: true }).json({
-                    id: foundUser._id,
+                    token, id: foundUser._id,
                 })
+                // Set the token in the response header
+                res.setHeader('Authorization', token);
             })
         }
     }
@@ -116,8 +94,10 @@ app.post('/register', async (req, res) => {
         jwt.sign({ userId: createdUser._id, username }, jwtSecret, {}, (err, token) => {
             if (err) throw err;
             res.cookie('token', token, {sameSite: 'none', secure: true}).status(201).json({
-                id: createdUser._id, 
+                token, id: createdUser._id, 
             })
+            // Set the token in the response header
+            res.setHeader('Authorization', token);
         })
     } catch (err) {
         if (err) throw err
