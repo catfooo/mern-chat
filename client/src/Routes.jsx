@@ -16,6 +16,9 @@ export default function Routes() {
     console.log('2', username, id)
 
     useEffect(() => {
+        console.log('Inside useEffect - contextUsername:', contextUsername);
+    console.log('Inside useEffect - contextId:', contextId);
+
         setUsername(contextUsername);
         setId(contextId);
 
@@ -24,6 +27,15 @@ export default function Routes() {
         console.log('token in client:', token);
         console.log('routes:', id, username);
     }, [contextUsername, contextId, id, username]); // Only run when context values change
+// }, [contextUsername, contextId, token]); // Only run when context values change
+// }, [contextUsername, contextId]); // Only run when context values change
+
+       // Log initial values after the initial render
+       useEffect(() => {
+        console.log('Initial values:', id, username);
+    }, []);
+
+    console.log('routes2:', id, username);
 
     if (username) {
     // if (isLoggedIn) {

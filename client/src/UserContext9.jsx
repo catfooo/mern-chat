@@ -19,26 +19,22 @@ export const UserContextProvider = ({ children }) => {
             Authorization: token,
           },
         });
-        const { userId, username } = response.data.userData;
+        const userData = response.data;
 
-        // Use callback form of state setter functions with console logs
+        // Use callback form of state setter functions with dependencies
         setId(prevId => {
-          console.log('Previous ID:', prevId);
-          console.log('Setting new ID:', userId || prevId);
-          return userId || prevId;
+          console.log('Setting new id:', userData.userId || prevId);
+          return userData.userId || prevId;
         });
 
         setUsername(prevUsername => {
-          console.log('Previous Username:', prevUsername);
-          console.log('Setting new Username:', username || prevUsername);
-          return username || prevUsername;
+          console.log('Setting new username:', userData.username || prevUsername);
+          return userData.username || prevUsername;
         });
 
         setIsLoggedIn(true);
 
-        console.log('userContext values set:', response.data.userData);
-        console.log('userData.userId:', userId);
-        console.log('userData.username:', username);
+        console.log('userContext values set:', userData);
         console.log('UserContext values updated:', { id, username, isLoggedIn });
       } else {
         setIsLoggedIn(false);
