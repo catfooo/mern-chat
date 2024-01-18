@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import RegisterAndLoginForm from "./RegisterAndLoginForm";
 import { UserContext } from "./UserContext";
+import Chat from "./Chat"
 
 // const getCookie = (name) => {
 //     const value = `; ${document.cookie}`;
@@ -39,7 +40,8 @@ export default function Routes() {
 
     if (username) {
     // if (isLoggedIn) {
-        return 'logged in!' + username;
+        // return 'logged in!' + username;
+        return <Chat />
     }
 
     return <RegisterAndLoginForm />;
