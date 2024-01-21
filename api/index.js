@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken')
 const cors = require('cors')
 const bcrypt = require('bcryptjs')
 const User = require('./models/User')
+const Message = require('./models/Message')
 const ws = require('ws')
 
 dotenv.config()
@@ -42,8 +43,38 @@ app.use((req, res, next) => {
     }
 });
 
+async function getUserDataFromRequest(req) {
+    return new Promise((resolve, reject) => {
+        const token = req.cookies?.token
+        if (token) {
+            jwt.verify(token, jwtSecret, {}, (err, userData) => {
+                if (err) throw err
+                resolve(userData)
+            })
+        } else {
+            reject('no token')
+        }
+    })
+}
+
 app.get('/test', (req, res) => {
     res.json('test ok')
+})
+
+app.get('/messages/:userId', async (req, res) => {
+    const {userId} = req.params
+    const userData = await getUserDataFromRequest(req)
+    const ourUserId = userData.userId
+    const messages = await Message.find({
+        sender:{$in:[userId,ourUserId]},
+        recipient:{$in:[userId,ourUserId]},
+    }).sort({createdAt: 1})
+    res.json(messages)
+})
+
+app.get('/people', async (req, res) => {
+    const users = await User.find({}, {'_id': 1, username: 1})
+    res.json(users)
 })
 
 app.get('/profile', (req, res) => {
@@ -53,10 +84,6 @@ app.get('/profile', (req, res) => {
         jwt.verify(token, jwtSecret, {}, (err, userData) => {
             if (err) throw err
             res.json({userData})
-            console.log('userData:', userData)
-            // // Send the initial HTML with the decoded user information
-            // res.sendFile(path.join(__dirname, 'public', 'index.html'));
-           
         })
     } else {
         res.status(401).json('no token')
@@ -82,6 +109,10 @@ app.post('/login', async (req, res) => {
             })
         }
     }
+})
+
+app.post('/logout', (req, res) => {
+    res.cookie('token', '', { sameSite: 'none', secure: true }).json('ok')
 })
 
 app.post('/register', async (req, res) => {
@@ -110,6 +141,33 @@ const server = app.listen(4040)
 
 const wss = new ws.WebSocketServer({server})
 wss.on('connection', (connection, req) => {
+
+    function notifyAboutOnlinePeople() {
+        Array.from(wss.clients).forEach(client => {
+            client.send(JSON.stringify({
+                online: Array.from(wss.clients).map(c => ({ userId: c.userId, username: c.username }))
+            }))
+        })
+    }
+
+    connection.isAlive = true
+
+    connection.timer = setInterval(() => {
+        connection.ping()
+        connection.deathTimer = setTimeout(() => {
+            connection.isAlive = false
+            clearInterval(connection.timer)
+            connection.terminate()
+            notifyAboutOnlinePeople()
+            console.log('dead')
+        }, 1000);
+    }, 5000)
+
+    connection.on('pong', () => {
+        clearTimeout(connection.deathTimer)
+    })
+
+    // read username and id from the cookie for this connection
     const cookies = req.headers.cookie
     if (cookies) {
         const tokenCookieString = cookies.split(';').find(str => str.startsWith('token='))
@@ -126,11 +184,39 @@ wss.on('connection', (connection, req) => {
         }
     }
 
-    // console.log([...wss.clients].map(c => c.username))
-    [...wss.clients].forEach(client => {
-        client.send(JSON.stringify({
-            online: [...wss.clients].map(c => ({ userId: c.userId, username: c.username }))
-        }))
+    connection.on('message', async (message) => {
+        const messageData = JSON.parse(message.toString())
+        const {recipient, text} = messageData
+        if (recipient && text) {
+            const messageDoc = await Message.create({
+                sender: connection.userId,
+                recipient,
+                text,
+            })
+            // [...wss.clients]
+            //     .filter(c => c.userId === recipient)
+            //     .forEach(c => c.send(JSON.stringify({
+            //         text, 
+            //         sender: connection.userId,
+            //         _id: messageDoc._id
+            //     })))
+            Array.from(wss.clients)
+                .filter(c => c.userId === recipient)
+                .forEach(c => c.send(JSON.stringify({
+                    text, 
+                    sender: connection.userId,
+                    recipient,
+                    _id: messageDoc._id
+                }))) ;
+        }
     })
+
+    // notify everyone about online people (when someone connects)
+    // [...wss.clients].forEach(client => {
+    //     client.send(JSON.stringify({
+    //         online: [...wss.clients].map(c => ({ userId: c.userId, username: c.username }))
+    //     }))
+    // })
+    notifyAboutOnlinePeople()
 })
-//
+
